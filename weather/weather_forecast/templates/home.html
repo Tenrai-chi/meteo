@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Погода</title>
+</head>
+<body>
+    <h1>Добро пожаловать!</h1>
+    <p>{{ message }}</p>
+
+    {% for city in last_cities %}
+        <p>Хотите посмотреть погоду в городе {{ city }} еще раз?
+            <a href="{% url 'home' %}?city_name={{ city }}">Показать погоду</a>
+        </p>
+    {% endfor %}
+
+    <form method="post" action="{% url 'home' %}">
+        {% csrf_token %}
+        <label for="city_name">Введите название города:</label>
+        <input type="text" id="city_name" name="city_name" value="{{ city_name|default:'' }}">
+        <button type="submit">Получить прогноз</button>
+    </form>
+
+    {% if error_message %}
+        <p style="color: red;">{{ error_message }}</p>
+    {% endif %}
+
+    {% if forecasts %}
+        <h2>Прогноз погоды на 7 дней в {{ city_name_for_template }}</h2>
+        <div class="weather-container">
+            {% for forecast in forecasts %}
+                <div class="weather-card">
+                    <h3>{{ forecast.date }} ({{ forecast.weekday }})</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Время</th>
+                                <th>Температура (°C)</th>
+                                <th>Влажность (%)</th>
+                                <th>Скорость ветра (м/с)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for hourly_data in forecast.hourly_data %}
+                                <tr>
+                                    <td>{{ hourly_data.time }}</td>
+                                    <td>{{ hourly_data.temperature }}</td>
+                                    <td>{{ hourly_data.humidity }}</td>
+                                    <td>{{ hourly_data.windspeed }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+</body>
+</html>
