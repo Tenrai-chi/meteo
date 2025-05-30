@@ -3,6 +3,7 @@
     - Данные о погоде на 7 дней берутся с API open-meteo.com
 """
 
+import logging
 import openmeteo_requests
 import pandas as pd
 import requests
@@ -38,16 +39,16 @@ def parse_coordinates(city_name: str) -> tuple | None:
                     lon = float(longitude)
                     return lat, lon
                 except ValueError:
-                    print('Ошибка в преобразовании координат')
+                    logging.error(f'Ошибка в преобразовании координат')
             else:
-                print('Не найдены значения широты и долготы')
+                logging.error(f'Не найдены значения широты и долготы')
         else:
-            print('Не удалось координаты на странице')
+            logging.error(f'Не удалось координаты на странице')
 
     except requests.exceptions.RequestException as e:
-        print(f'Ошибка при запросе: {e}')
+        logging.error(f'Ошибка при запросе: {e}')
     except Exception as e:
-        print(f'Ошибка при парсинге: {e}')
+        logging.error(f'Ошибка при парсинге: {e}')
 
 
 def get_weather(latitude: float, longitude: float) -> list | None:
@@ -112,7 +113,7 @@ def get_weather(latitude: float, longitude: float) -> list | None:
         return daily_forecasts
 
     except Exception as e:
-        print(f'Ошибка при получении погоды по координатам: {e}')
+        logging.error(f'Ошибка при получении погоды по координатам: {e}')
 
 
 def request_api(city_name: str) -> dict:
@@ -128,6 +129,5 @@ def request_api(city_name: str) -> dict:
         return {'data': data,
                 'error': None}
     else:
-        return {'error': 'Не удалось найти информацию о погоде в заданном городе'}
-
-
+        return {'error': 'Не удалось найти информацию о погоде в заданном городе',
+                'data': None}
