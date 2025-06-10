@@ -37,17 +37,13 @@ docker version
 ```bash
 git clone https://github.com/Tenrai-chi/meteo.git
 ```
-В папке weather создайте файл .env. В этом файле создайте ENCRYPTION_KEY и поместите туда ключ Fernet для шифрования.
+Создайте файл .env. В этом файле создайте ENCRYPTION_KEY и поместите туда ключ Fernet для шифрования.
 Для генерации ключа используйте [сайт](https://fernetkeygen.com/) или установите библиотеку cryptography и используйте этот код:
 ```
 from cryptography.fernet import Fernet
 
 fernet_key = Fernet.generate_key()
 print(fernet_key.decode())
-```
-Перейдите в папку weather внутри проекта!
-```bash
-cd weather
 ```
 Теперь вы можете создать образ
 ```bash
