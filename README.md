@@ -64,10 +64,6 @@ docker-compose exec django_web python weather/manage.py test weather_forecast.te
 ```
 
 Теперь проект работает на вашем [localhost](http://127.0.0.1:8080/)
-
-## Установка и запуск проекта без docker compose
-Склонируйте к себе проект:
-```bash
-git clone https://github.com/Tenrai-chi/meteo.git
-```
-Создайте и активируйте виртуальное окружение
+## Скриншоты:
+![Форма для запроса с кнопками](https://github.com/user-attachments/assets/9d74fcf8-79c9-4fcf-be16-49cefab1ef9d)
+![Вывод погоды](https://github.com/user-attachments/assets/ac86b91f-3284-4557-a0eb-3e9c28eb3610)
