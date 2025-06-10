@@ -1,0 +1,85 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Погода</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-4 mb-3">Прогноз погоды</h1>
+
+        {% if message %}
+            <div class="alert alert-info" role="alert">
+                {{ message }}
+            </div>
+        {% endif %}
+
+        {% if last_cities %}
+            <div class="mb-3">
+                <p><b>Показать еще раз:</b></p>
+                {% for city in last_cities %}
+                    <a href="{% url 'home' %}?city_name={{ city }}" class="btn btn-outline-secondary btn-sm mr-2">{{ city }}</a>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'home' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="city_name">Введите название города:</label>
+                <input type="text" class="form-control" id="city_name" name="city_name" value="{{ city_name|default:'' }}" placeholder="Например, Москва">
+            </div>
+            <button type="submit" class="btn btn-primary">Получить прогноз</button>
+        </form>
+
+        {% if error_message %}
+            <div class="alert alert-danger mt-3" role="alert">
+                {{ error_message }}
+            </div>
+        {% endif %}
+
+        {% if forecasts %}
+            <h2 class="mt-4">Прогноз погоды на 7 дней в {{ city_name_for_template }}</h2>
+            <div class="container">
+                <div class="row">
+                    {% for forecast in forecasts %}
+                        <div class="col-sm-12 col-md-6">
+                            <div class="weather-card">
+                                <h3>{{ forecast.date }} ({{ forecast.weekday }})</h3>
+                                <table class="table table-bordered table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Время</th>
+                                            <th>Температура (°C)</th>
+                                            <th>Влажность (%)</th>
+                                            <th>Скорость ветра (м/с)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for hourly_data in forecast.hourly_data %}
+                                            <tr>
+                                                <td>{{ hourly_data.time }}</td>
+                                                <td>{{ hourly_data.temperature }}</td>
+                                                <td>{{ hourly_data.humidity }}</td>
+                                                <td>{{ hourly_data.windspeed }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
